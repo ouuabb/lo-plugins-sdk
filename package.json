@@ -1,0 +1,47 @@
+{
+  "name": "@lo/sdk",
+  "version": "0.1.0",
+  "description": "lo 插件开发工具包 —— lo Core 与插件之间的稳定契约层",
+  "main": "src/index.cjs",
+  "types": "types/index.d.ts",
+  "files": [
+    "src/",
+    "types/",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "lo",
+    "plugin",
+    "sdk",
+    "knowledge-base",
+    "resource-management"
+  ],
+  "author": "lo Project",
+  "license": "MIT",
+  "peerDependencies": {
+    "lo": ">=0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "lo": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@commitlint/cli": "^21.1.0",
+    "@commitlint/config-conventional": "^21.1.0",
+    "babel-jest": "^29.7.0",
+    "fs-extra": "^11.2.0",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "vitepress": "^1.6.4"
+  }
+}
