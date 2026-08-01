@@ -693,8 +693,8 @@ describe('Plugin / ResourceProvider 边缘情况', () => {
     const p = new P();
     const ctx = new PluginContext({ pluginId: 'test', extensionRegistry: registry });
     p.register(ctx);
-    // 绑定的 discover 函数应该只需要传 source（ctx 已绑定）
-    const result = await registered[0].discover('/path/to/file');
+    // discover 不绑死 ctx，调用方需传 (ctx, source) —— 与 DiscoveryService 约定一致
+    const result = await registered[0].discover(ctx, '/path/to/file');
     expect(result).toHaveLength(1);
     expect(result[0].resource.name).toBe('/path/to/file');
   });

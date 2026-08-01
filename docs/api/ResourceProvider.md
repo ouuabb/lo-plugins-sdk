@@ -55,9 +55,27 @@ module.exports = EpubAdapter;
 
 ### `async discover(ctx: PluginContext, source: any): Promise<ProviderCandidate[]>`
 
-从输入源发现资源，返回候选数组。
+`discover` 方法由 DiscoveryService 调用，接收两个参数：
 
-每个元素结构：
+- `ctx`: PluginContext（包含 config、resources、relations 等服务）
+- `source`: 资源来源（如文件路径）
+
+**重要变更**：`register()` 中绑定的 `discover` 不再绑死 context。DiscoveryService 调用时会传入带 config 的 ctx，插件可直接使用。
+
+```javascript
+class MyProvider extends ResourceProvider {
+  async discover(ctx, source) {
+    // ctx 是 DiscoveryService 传入的，包含 config 等
+    const config = ctx.config || {};
+    // source 是文件路径
+    const records = await readFile(source);
+    // 返回候选对象数组
+    return records.map(r => buildCandidate(r));
+  }
+}
+```
+
+返回候选数组。每个元素结构：
 
 ```ts
 type ProviderCandidate = {

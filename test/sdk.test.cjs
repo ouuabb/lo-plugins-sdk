@@ -378,4 +378,78 @@ describe('ResourceProvider 抽象基类', () => {
     const p = new P();
     await expect(p.watch('/x', () => {})).rejects.toThrow(/不支持增量监听/);
   });
+
+  // ── Plugin getter 异常 fallback ──
+
+  test('Plugin.id 在 manifest() 抛异常时返回空字符串', () => {
+    class BadPlugin extends Plugin {
+      manifest() { throw new Error('manifest error'); }
+    }
+    const p = new BadPlugin();
+    expect(p.id).toBe('');
+  });
+
+  test('Plugin.name 在 manifest() 抛异常时返回空字符串', () => {
+    class BadPlugin extends Plugin {
+      manifest() { throw new Error('manifest error'); }
+    }
+    const p = new BadPlugin();
+    expect(p.name).toBe('');
+  });
+
+  test('Plugin.version 在 manifest() 抛异常时返回 0.0.0', () => {
+    class BadPlugin extends Plugin {
+      manifest() { throw new Error('manifest error'); }
+    }
+    const p = new BadPlugin();
+    expect(p.version).toBe('0.0.0');
+  });
+
+  test('Plugin.dependencies 在 manifest() 抛异常时返回空数组', () => {
+    class BadPlugin extends Plugin {
+      manifest() { throw new Error('manifest error'); }
+    }
+    const p = new BadPlugin();
+    expect(p.dependencies).toEqual([]);
+  });
+
+  test('Plugin.contributes 在 manifest() 抛异常时返回空对象', () => {
+    class BadPlugin extends Plugin {
+      manifest() { throw new Error('manifest error'); }
+    }
+    const p = new BadPlugin();
+    expect(p.contributes).toEqual({});
+  });
+
+  test('Plugin getter 在 manifest() 返回 null 时返回 fallback', () => {
+    class NullPlugin extends Plugin {
+      manifest() { return null; }
+    }
+    const p = new NullPlugin();
+    expect(p.id).toBe('');
+    expect(p.name).toBe('');
+    expect(p.version).toBe('0.0.0');
+    expect(p.dependencies).toEqual([]);
+    expect(p.contributes).toEqual({});
+  });
+
+  test('Plugin getter 正常情况返回 manifest 值', () => {
+    class GoodPlugin extends Plugin {
+      manifest() {
+        return {
+          id: 'test-plugin',
+          name: 'Test Plugin',
+          version: '1.2.3',
+          dependencies: ['other-plugin'],
+          contributes: { resourceTypes: [{ type: 'test' }] },
+        };
+      }
+    }
+    const p = new GoodPlugin();
+    expect(p.id).toBe('test-plugin');
+    expect(p.name).toBe('Test Plugin');
+    expect(p.version).toBe('1.2.3');
+    expect(p.dependencies).toEqual(['other-plugin']);
+    expect(p.contributes).toEqual({ resourceTypes: [{ type: 'test' }] });
+  });
 });

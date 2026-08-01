@@ -98,3 +98,19 @@ Manifest 字段：
 | `isEnabled` | boolean | 是否已启用 |
 | `isDisposed` | boolean | 是否已销毁 |
 | `$manifest` | Manifest | 解析后的完整 manifest（Core 内部用） |
+
+---
+
+## 元信息快捷访问
+
+Plugin 基类提供以下只读 getter，从 `manifest()` 返回值中提取：
+
+| getter | 返回类型 | 说明 | fallback（manifest() 异常时） |
+|---|---|---|---|
+| `id` | string | 插件 ID | `''` |
+| `name` | string | 插件显示名 | `''` |
+| `version` | string | 插件版本 | `'0.0.0'` |
+| `dependencies` | string[] | 依赖的插件 ID 列表 | `[]` |
+| `contributes` | object | 声明式扩展点注册 | `{}` |
+
+所有 getter 都有 try-catch 保护，`manifest()` 抛异常时返回 fallback 值，不会崩溃。

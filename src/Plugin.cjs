@@ -104,6 +104,38 @@ class Plugin {
     return this._manifest || this.manifest();
   }
 
+  // ── 元信息快捷访问（与 lo Core Plugin 接口对齐）──
+
+  /** 插件 ID（来自 manifest().id） */
+  get id() {
+    try { return (this.manifest() && this.manifest().id) || ''; }
+    catch { return ''; }
+  }
+
+  /** 插件显示名（来自 manifest().name） */
+  get name() {
+    try { return (this.manifest() && this.manifest().name) || this.id; }
+    catch { return ''; }
+  }
+
+  /** 插件版本（来自 manifest().version） */
+  get version() {
+    try { return (this.manifest() && this.manifest().version) || '0.0.0'; }
+    catch { return '0.0.0'; }
+  }
+
+  /** 依赖的其他插件 ID 列表（来自 manifest().dependencies） */
+  get dependencies() {
+    try { return (this.manifest() && this.manifest().dependencies) || []; }
+    catch { return []; }
+  }
+
+  /** 声明式扩展点注册（来自 manifest().contributes） */
+  get contributes() {
+    try { return (this.manifest() && this.manifest().contributes) || {}; }
+    catch { return {}; }
+  }
+
   /**
    * 获取 PluginContext
    * @protected 子类可通过 this.context 访问

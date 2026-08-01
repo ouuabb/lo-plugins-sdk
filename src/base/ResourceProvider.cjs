@@ -120,7 +120,9 @@ class ResourceProvider extends Plugin {
         {
           providerId: this.providerId,
           supports: this.supports.bind(this),
-          discover: this.discover.bind(this, context),
+          // 注意：不绑死 context，由 DiscoveryService 在调用时传入
+          // （DiscoveryService 会为每次 discover 创建带 config 的 ctx）
+          discover: this.discover.bind(this),
           watch: this.watch.bind(this),
         }
       );
