@@ -1,5 +1,6 @@
 {
   "name": "@lo/plugins-sdk",
+  "packageManager": "yarn@1.22.22",
   "version": "0.1.0",
   "description": "lo 插件开发工具包 —— lo Core 与插件之间的稳定契约层",
   "main": "src/index.cjs",
