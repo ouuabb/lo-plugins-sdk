@@ -87,7 +87,7 @@ class EpubAdapter extends ResourceProvider {
 
   async enable() {
     await super.enable();
-    this._unsub = this.context.events.on('resource:created', (r) => {
+    this._unsub = this.context.events.on('resource.created', (r) => {
       if (r.type === 'epub') this._queue(r);
     });
   }

@@ -163,6 +163,13 @@ describe('ResourceBuilder 边缘情况', () => {
     expect(c.container_schema).toEqual({ ignored_patterns: [] });
   });
 
+  test('containerSchema() 不传参数使用默认空数组', () => {
+    const c = ResourceBuilder.of('container')
+      .containerSchema()
+      .build();
+    expect(c.container_schema).toEqual({ ignored_patterns: [] });
+  });
+
   test('rid(null) 安全清除 rid', () => {
     const b = ResourceBuilder.note().rid('res_abc');
     b.rid(null);
@@ -201,6 +208,12 @@ describe('ResourceBuilder 边缘情况', () => {
   test('默认构造器 type=unknown', () => {
     const b = new ResourceBuilder();
     expect(b.build().type).toBe('unknown');
+  });
+
+  test('build() 在内部 _type 被破坏（缺 type）时抛错', () => {
+    const b = new ResourceBuilder();
+    b._type = null; // 模拟内部状态损坏的防御分支
+    expect(() => b.build()).toThrow(/type 未设置/);
   });
 });
 
@@ -330,6 +343,23 @@ describe('Logger 边缘情况', () => {
     c.info('x');   // 被忽略
     c.warn('x');   // +1
     expect(n).toBe(1);
+  });
+
+  test('产地构造默认：无参数时 target=console、level=debug', () => {
+    const l = new Logger();
+    expect(l._target).toBe(console);
+    expect(l._level).toBe('debug');
+    expect(l._prefix).toBe('');
+    // debug 级别下所有日志都输出到 console
+  });
+
+  test('level 传非法值时回退到 debug（`?? 0` 分支）', () => {
+    let n = 0;
+    const mock = { log() { n++; }, info() { n++; }, warn() { n++; }, error() { n++; } };
+    const l = new Logger({ target: mock, level: 'bogus' });
+    l.debug('x');
+    l.info('x');
+    expect(n).toBe(2); // order['bogus'] undefined → 0 → debug/info 都通过
   });
 
   test('child 的 child 前缀级联', () => {
@@ -554,6 +584,41 @@ describe('PluginContext 边缘情况', () => {
     await expect(ctx.relations.remove('res_a', 'res_b')).resolves.toBe(false);
   });
 
+  test('默认 noop：logger.child / eventBus.on / resources 其余方法都是安全默认值', async () => {
+    const ctx = new PluginContext();
+
+    // noop logger 的 child() 返回另一个 noop logger
+    const sub = ctx.logger.child('sub');
+    expect(typeof sub.info).toBe('function');
+    expect(() => sub.info('x')).not.toThrow();
+    // 覆盖 noop logger 的 debug/warn/error 方法体
+    expect(() => ctx.logger.debug('x')).not.toThrow();
+    expect(() => ctx.logger.warn('x')).not.toThrow();
+    expect(() => ctx.logger.error('x')).not.toThrow();
+
+    // noop extensions registry 的 unregister 方法体
+    expect(() => ctx.extensions.unregister('p', 'commands', 'hi')).not.toThrow();
+
+    // noop hookManager 的 register/unregister/runAfter 方法体
+    expect(() => ctx.hooks.register('beforeResourceCreate', () => {})).not.toThrow();
+    expect(() => ctx.hooks.unregister('beforeResourceCreate')).not.toThrow();
+    await expect(ctx.hooks.runAfter({})).resolves.toBeUndefined();
+
+    // noop eventBus 的 on() 返回取消函数，off/emit 安全
+    const off = ctx.events.on('x', () => {});
+    expect(typeof off).toBe('function');
+    off(); // 调用返回的取消函数（覆盖 on 内部箭头函数体）
+    expect(() => ctx.events.off('x', () => {})).not.toThrow();
+    expect(() => ctx.events.emit('x')).not.toThrow();
+    await expect(ctx.events.emitAsync('x')).resolves.toBeUndefined();
+
+    // noop resources 的其余方法返回安全默认值
+    await expect(ctx.resources.getByRid('res_x')).resolves.toBeNull();
+    await expect(ctx.resources.list()).resolves.toEqual([]);
+    await expect(ctx.resources.update('res_x', { name: 'x' })).resolves.toBeNull();
+    await expect(ctx.resources.delete('res_x')).resolves.toBe(false);
+  });
+
   test('setConfig 默认 noop 不抛错', async () => {
     const ctx = new PluginContext();
     await expect(ctx.setConfig('key', 'value')).resolves.toBeUndefined();
@@ -562,6 +627,18 @@ describe('PluginContext 边缘情况', () => {
   test('config() 传入 null 返回空对象', () => {
     const ctx = new PluginContext({ config: null });
     expect(ctx.config()).toEqual({});
+  });
+
+  test('config() 传入 falsy config 时内部回退到空对象', () => {
+    const ctx = new PluginContext({ config: undefined });
+    expect(ctx.config()).toEqual({});
+  });
+
+  test('config() 在 _config 被内部置空时防御回退（覆盖 || {} 分支）', () => {
+    const ctx = new PluginContext({ config: { a: 1 } });
+    ctx._config = undefined; // 模拟内部状态被破坏
+    expect(ctx.config()).toEqual({});
+    expect(ctx.config('a', 'def')).toBe('def');
   });
 });
 
@@ -631,6 +708,20 @@ describe('Plugin / ResourceProvider 边缘情况', () => {
     }
     const p = new P();
     expect(p.providerId).toBe('my-adapter');
+  });
+
+  test('ResourceProvider.providerId 在 manifest 为空时回退到类名', () => {
+    class NoManifest extends ResourceProvider {
+      async discover() { return []; }
+    }
+    // manifest() 未实现 → Provider 基类抛出；但 providerId 的 null 分支用 constructor.name
+    // 这里用 manifest 返回 null 的子类覆盖回退分支
+    class Fallback extends ResourceProvider {
+      manifest() { return null; }
+      async discover() { return []; }
+    }
+    expect(new Fallback().providerId).toBe('Fallback');
+    expect(NoManifest.name).toBe('NoManifest');
   });
 
   test('ResourceProvider.extensionKey 格式正确', () => {

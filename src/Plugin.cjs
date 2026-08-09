@@ -13,6 +13,7 @@ class Plugin {
   constructor() {
     this._manifest = null;
     this._context = null;
+    this._state = 'created';
     this._enabled = false;
     this._disposed = false;
   }
@@ -26,10 +27,14 @@ class Plugin {
    * @property {string}  version                 — 语义化版本（semver）
    * @property {string}  [description]           — 简介
    * @property {string}  [role]                  — 角色标签: 'adapter' | 'connector' | 'discovery' | 'general'
+   * @property {string}  [author]                — 作者
+   * @property {string}  [loVersion]             — 需要的 lo 版本（如 '>=0.1.0'）
    * @property {string[]}[dependencies]          — 依赖的其他插件 ID 列表
+   * @property {object}  [config]                — 插件配置 schema（key → { type, default, description }）
+   * @property {string[]}[extensions]            — 声明使用的扩展点列表
    * @property {object}  [contributes]           — 声明式扩展点注册
-   * @property {object}  [contributes.resourceTypes]
-   * @property {object}  [contributes.relationTypes]
+   * @property {Array<{ type, extensions?, metadataSchema?, description? }>} [contributes.resourceTypes]
+   * @property {Array<{ type, description? }>}   [contributes.relationTypes]
    * @property {object}  [contributes.commands]
    * @property {object}  [contributes.importers]
    * @property {object}  [contributes.exporters]
@@ -142,6 +147,32 @@ class Plugin {
    */
   get context() {
     return this._context;
+  }
+
+  /**
+   * 注入 PluginContext
+   *
+   * 与 lo Core Plugin 接口对齐：旧插件可能依赖 `plugin.context = ctx`。
+   * 推荐新插件由 Core 通过 `$setContext()` 注入（PluginManager 会自动调用）。
+   */
+  set context(value) {
+    this._context = value;
+  }
+
+  /**
+   * 生命周期状态（与 lo Core Plugin 接口对齐）
+   *
+   * 取值与 LifecycleManager 一致：
+   *   created → loaded → initialized → enabled → disabled → disposed
+   *
+   * 状态由 lo PluginManager / LifecycleManager 写入，插件代码通常只读。
+   */
+  get state() {
+    return this._state;
+  }
+
+  set state(value) {
+    this._state = value;
   }
 
   /** 是否已启用 */

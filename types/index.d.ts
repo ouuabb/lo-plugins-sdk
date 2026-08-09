@@ -18,12 +18,44 @@ export interface PluginManifest {
   description?: string;
   /** 角色标签 */
   role?: 'adapter' | 'connector' | 'discovery' | 'general';
+  /** 作者 */
+  author?: string;
+  /** 需要的 lo 版本（如 '>=0.1.0'） */
+  loVersion?: string;
   /** 依赖的其他插件 ID 列表 */
   dependencies?: string[];
+  /**
+   * 插件配置 schema（key → { type, default, description }）
+   * PluginManager 读取并落 plugin_settings 表，`ctx.config(key)` 返回已合并默认值
+   */
+  config?: Record<
+    string,
+    {
+      type?: 'string' | 'number' | 'boolean';
+      default?: any;
+      description?: string;
+    }
+  >;
+  /** 声明使用的扩展点列表 */
+  extensions?: string[];
   /** 声明式扩展点注册 */
   contributes?: {
-    resourceTypes?: Record<string, object>;
-    relationTypes?: Record<string, object>;
+    /** 自定义资源类型（数组形态：{ type, extensions?, metadataSchema?, description? }） */
+    resourceTypes?: Array<{
+      type: string;
+      extensions?: string[];
+      /** 自定义 metadata 字段 schema，type 取值: string | number | boolean | array */
+      metadataSchema?: Record<
+        string,
+        { type: 'string' | 'number' | 'boolean' | 'array' }
+      >;
+      description?: string;
+    }>;
+    /** 自定义关系类型（数组形态） */
+    relationTypes?: Array<{
+      type: string;
+      description?: string;
+    }>;
     commands?: Record<string, { description?: string }>;
     importers?: Record<string, object>;
     exporters?: Record<string, object>;
@@ -232,7 +264,15 @@ export declare class Plugin {
   /** @internal 由 Core 读取 */
   readonly $manifest: PluginManifest;
 
-  readonly context: PluginContext | null;
+  readonly id: string;
+  readonly name: string;
+  readonly version: string;
+  readonly dependencies: string[];
+  readonly contributes: PluginManifest['contributes'];
+
+  context: PluginContext | null;
+  /** 生命周期状态: created → loaded → initialized → enabled → disabled → disposed（由 Core 写入） */
+  state: string;
   readonly isEnabled: boolean;
   readonly isDisposed: boolean;
 }

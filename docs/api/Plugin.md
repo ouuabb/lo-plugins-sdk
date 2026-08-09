@@ -57,16 +57,22 @@ Manifest 字段：
 | `version` | ✅ | string | 语义化版本 |
 | `description` | - | string | 简介 |
 | `role` | - | 'adapter' \| 'connector' \| 'discovery' \| 'general' | 角色标签 |
+| `author` | - | string | 作者 |
+| `loVersion` | - | string | 需要的 lo 版本（如 `>=0.1.0`） |
 | `dependencies` | - | string[] | 依赖的 plugin ids |
+| `config` | - | Record<string, { type, default, description }> | 插件配置 schema（`ctx.config()` 读取） |
+| `extensions` | - | string[] | 声明使用的扩展点列表 |
 | `contributes` | - | object | 声明式扩展点注册 |
-| `contributes.resourceTypes` | - | Record<string, object> | 自定义资源类型 |
-| `contributes.relationTypes` | - | Record<string, object> | 自定义关系类型 |
+| `contributes.resourceTypes` | - | Array<{ type, extensions?, metadataSchema?, description? }> | 自定义资源类型 |
+| `contributes.relationTypes` | - | Array<{ type, description? }> | 自定义关系类型 |
 | `contributes.commands` | - | Record<string, object> | CLI 扩展命令 |
 | `contributes.importers` | - | Record<string, object> | 导入器 |
 | `contributes.exporters` | - | Record<string, object> | 导出器 |
 | `contributes.renderers` | - | Record<string, object> | 渲染器 |
 | `contributes.searchProviders` | - | Record<string, object> | 搜索提供商 |
 | `contributes.views` | - | Record<string, object> | 自定义视图 |
+
+`contributes.resourceTypes[].metadataSchema` 声明自定义 metadata 字段，Core 在插件激活时注册到校验系统，支持类型：`string` / `number` / `boolean` / `array`。
 
 ### `register(context: PluginContext): void`
 
@@ -90,11 +96,12 @@ Manifest 字段：
 
 ---
 
-## 运行时属性（子类读取，不可写）
+## 运行时属性
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
-| `context` | PluginContext | register(ctx) 传入的 context |
+| `context` | PluginContext | register(ctx) 传入的 context（可写，向后兼容旧插件） |
+| `state` | string | 生命周期状态：created → loaded → initialized → enabled → disabled → disposed（由 Core 写入，插件只读） |
 | `isEnabled` | boolean | 是否已启用 |
 | `isDisposed` | boolean | 是否已销毁 |
 | `$manifest` | Manifest | 解析后的完整 manifest（Core 内部用） |

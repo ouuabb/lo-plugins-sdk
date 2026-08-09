@@ -66,6 +66,45 @@ describe('Plugin 基类', () => {
     expect(p.$manifest.id).toBe('dummy');
     expect(p.$manifest.version).toBe('1.0.0');
   });
+
+  test('state 默认 created 且可读写（与 Core 对齐）', () => {
+    const p = new DummyPlugin();
+    expect(p.state).toBe('created');
+    p.state = 'loaded';
+    expect(p.state).toBe('loaded');
+    p.state = 'enabled';
+    expect(p.state).toBe('enabled');
+  });
+
+  test('context 可通过 setter 写入（与 Core 兼容）', () => {
+    const p = new DummyPlugin();
+    const ctx = new PluginContext({ pluginId: 'dummy' });
+    p.context = ctx;
+    expect(p.context).toBe(ctx);
+  });
+
+  test('manifest 支持 config/author/loVersion/extensions 声明', () => {
+    class RichPlugin extends Plugin {
+      manifest() {
+        return {
+          id: 'rich',
+          name: 'Rich',
+          version: '1.0.0',
+          author: 'lo Project',
+          loVersion: '>=0.1.0',
+          config: { dataDir: { type: 'string', default: '.lo/data' } },
+          extensions: ['resourceTypes', 'commands'],
+          contributes: {
+            resourceTypes: [{ type: 'epub', extensions: ['.epub'], metadataSchema: { title: { type: 'string' } } }],
+            relationTypes: [{ type: 'source-of' }],
+          },
+        };
+      }
+    }
+    const p = new RichPlugin();
+    expect(p.contributes.resourceTypes[0].type).toBe('epub');
+    expect(p.contributes.relationTypes[0].type).toBe('source-of');
+  });
 });
 
 /* ─────────────────────────────────── 3. PluginContext 默认 noop 注入 ─────────────────── */
@@ -240,6 +279,9 @@ describe('Logger', () => {
     const l = Logger.silent();
     expect(() => l.debug('x', 1)).not.toThrow();
     expect(() => l.error('err')).not.toThrow();
+    // 覆盖 silent target 内部空方法体（log/info/warn/error）
+    const t = l._target;
+    t.log('x'); t.info('x'); t.warn('x'); t.error('x');
   });
 
   test('child 前缀拼接', () => {

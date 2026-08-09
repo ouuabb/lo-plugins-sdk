@@ -3,17 +3,18 @@
  *
  * 插件通过 context.events 监听/发布事件。
  *
+ * 事件命名与 lo Core 保持一致：使用点号 domain.action 格式，而不是冒号。
  * 常用事件（由 Core 发布）：
- *   'resource:created'  (resource)
- *   'resource:updated'  (resource, old)
- *   'resource:deleted'  (rid)
- *   'relation:created'  (relation)
- *   'relation:removed'  (relation)
- *   'plugin:enabled'    (pluginId)
- *   'plugin:disabled'   (pluginId)
- *   'sync:done'         ()
+ *   'resource.created'  (resource)
+ *   'resource.updated'  (resource, old)
+ *   'resource.deleted'  (rid)
+ *   'relation.created'  (relation)
+ *   'relation.deleted'  (relation)
+ *   'plugin.enabled'    (pluginId)
+ *   'plugin.disabled'   (pluginId)
+ *   'sync.finished'     ()
  *
- * 插件可发布自定义事件，命名建议：'<pluginId>:<eventName>'，如 'git-adapter:commit'。
+ * 插件可发布自定义事件，命名建议：'<pluginId>.<event>'，如 'git-adapter.commit'。
  */
 class EventApi {
   constructor() {

@@ -22,7 +22,7 @@ class P extends Plugin {
     });
 
     // 事件
-    ctx.events.on('resource:created', (res) => ctx.logger.info(`创建: ${res.rid}`));
+    ctx.events.on('resource.created', (res) => ctx.logger.info(`创建: ${res.rid}`));
 
     // 资源操作（Facade，内部 API 稳定）
     const res = await ctx.resources.create(ResourceBuilder.note().name('x').build());
@@ -43,7 +43,7 @@ class P extends Plugin {
 | `logger` | [Logger](./Logger) | 日志（debug/info/warn/error + child） |
 | `extensions` | ExtensionRegistry | 扩展点（register/unregister/get/has/list） |
 | `hooks` | HookManager | Hook（register/unregister/runBefore/runAfter） |
-| `events` | [EventApi](./EventApi) | 事件总线（on/off/emit/emitAsync） |
+| `events` | [EventApi](./EventApi) | 事件总线（on/off/once/emit/emitAsync） |
 | `resources` | ResourceFacade | 资源 CRUD 稳定 API |
 | `relations` | RelationFacade | 关系 CRUD 稳定 API |
 
@@ -75,13 +75,13 @@ class P extends Plugin {
 | `async getByRid(rid): Promise<Resource \| null>` | 按 rid 查询 |
 | `async list(query): Promise<Resource[]>` | 列表查询 |
 | `async update(rid, updates): Promise<Resource>` | 更新 |
-| `async delete(rid, { soft: true }): Promise<boolean>` | 删除 |
+| `async delete(rid, soft = true): Promise<boolean>` | 删除（默认软删除） |
 
 ### `relations`
 
 | 方法 | 说明 |
 |------|------|
-| `async create(candidate): Promise<Relation>` | 创建关系 |
-| `async listFrom(rid, type?): Promise<Relation[]>` | 查询出边（from=rid） |
-| `async listTo(rid, type?): Promise<Relation[]>` | 查询入边（to=rid） |
-| `async remove(id): Promise<boolean>` | 删除 |
+| `async create(candidate): Promise<Relation>` | 创建关系（candidate: { from_rid, to_rid, type, metadata? }） |
+| `async listFrom(rid): Promise<Relation[]>` | 查询出边（from=rid） |
+| `async listTo(rid): Promise<Relation[]>` | 查询入边（to=rid） |
+| `async remove(fromRid, toRid, type?): Promise<boolean>` | 按三元组删除关系 |
