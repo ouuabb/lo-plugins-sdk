@@ -1,5 +1,5 @@
 /**
- * @lo/sdk —— lo 插件开发工具包入口
+ * @lo/plugins-sdk —— lo 插件开发工具包入口
  *
  * 稳定公开 API 列表：
  *   - Plugin            —— 插件基类（最常用的通用插件）
@@ -10,11 +10,11 @@
  *   - Logger            —— 统一日志接口 + console/silent 实现
  *   - EventApi          —— 事件总线接口（on/off/emit/emitAsync）
  *
- * 插件代码应该只从 '@lo/sdk' 或 'lo-sdk' require，永不 require lo-core 内部文件。
+ * 插件代码应该只从 '@lo/plugins-sdk' 或 'lo-plugins-sdk' require，永不 require lo-core 内部文件。
  *
  * 用法示例：
  *
- *   const { Plugin, ResourceBuilder, RelationBuilder } = require('@lo/sdk');
+ *   const { Plugin, ResourceBuilder, RelationBuilder } = require('@lo/plugins-sdk');
  *
  *   class EpubPlugin extends Plugin {
  *     manifest() { return { id: 'epub', name: 'EPUB Adapter', version: '1.0.0' }; }

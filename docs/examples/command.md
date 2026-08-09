@@ -17,7 +17,7 @@
 ## index.js
 
 ```js
-const { Plugin } = require('@lo/sdk');
+const { Plugin } = require('@lo/plugins-sdk');
 const path = require('path');
 const fs = require('fs-extra');
 

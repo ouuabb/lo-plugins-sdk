@@ -3,7 +3,7 @@
 链式构造 ResourceCandidate（传给 context.resources.create() 或 ResourceProvider.discover() 返回）。
 
 ```js
-const { ResourceBuilder } = require('@lo/sdk');
+const { ResourceBuilder } = require('@lo/plugins-sdk');
 
 const candidate = ResourceBuilder
   .note()

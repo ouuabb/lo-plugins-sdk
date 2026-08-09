@@ -37,7 +37,7 @@ epub/
 ## index.js
 
 ```js
-const { ResourceProvider, ResourceBuilder, RelationBuilder } = require('@lo/sdk');
+const { ResourceProvider, ResourceBuilder, RelationBuilder } = require('@lo/plugins-sdk');
 const EPub = require('epub2');
 const path = require('path');
 

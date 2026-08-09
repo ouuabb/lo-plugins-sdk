@@ -1,6 +1,6 @@
-# @lo/sdk — lo 插件开发工具包
+# @lo/plugins-sdk — lo 插件开发工具包
 
-> lo Core 与插件之间的稳定契约层。插件只需 `require('@lo/sdk')`，永不依赖 lo 内部目录结构。
+> lo Core 与插件之间的稳定契约层。插件只需 `require('@lo/plugins-sdk')`，永不依赖 lo 内部目录结构。
 
 ---
 
@@ -18,7 +18,7 @@
 ## 快速开始
 
 ```js
-const { Plugin, ResourceBuilder } = require('@lo/sdk');
+const { Plugin, ResourceBuilder } = require('@lo/plugins-sdk');
 
 class HelloPlugin extends Plugin {
   manifest() {
@@ -47,7 +47,7 @@ module.exports = HelloPlugin;
 ## 目录结构
 
 ```
-lo-sdk/
+lo-plugins-sdk/
 ├── src/
 │   ├── index.cjs                  # SDK 入口（所有公开 API 从此导出）
 │   ├── Plugin.cjs                 # 插件基类

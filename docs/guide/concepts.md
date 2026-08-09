@@ -6,7 +6,7 @@
 ┌──────────────────────┐
 │  lo Core             │  资源/关系/容器/同步/持久化 —— 不理解外部系统
 ├──────────────────────┤
-│  @lo/sdk             │  稳定契约层：Plugin/Builders/Logger/EventApi
+│  @lo/plugins-sdk             │  稳定契约层：Plugin/Builders/Logger/EventApi
 ├──────────────────────┤
 │  lo Plugin System    │  加载/生命周期/扩展点/Hook —— 8 个组件
 ├──────────────────────┤
@@ -14,7 +14,7 @@
 └──────────────────────┘
 ```
 
-插件只能 `require('@lo/sdk')`，绝不能 `require('lo-core/src/...')`。
+插件只能 `require('@lo/plugins-sdk')`，绝不能 `require('lo-core/src/...')`。
 
 ---
 

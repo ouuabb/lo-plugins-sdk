@@ -1,5 +1,5 @@
 export default {
-  title: '@lo/sdk — lo 插件开发工具包',
+  title: '@lo/plugins-sdk — lo 插件开发工具包',
   description: 'lo Core 与插件之间的稳定契约层：Plugin、ResourceProvider、Builder、Logger、EventApi',
   lang: 'zh-CN',
   cleanUrls: true,

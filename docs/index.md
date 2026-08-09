@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: "@lo/sdk"
+  name: "@lo/plugins-sdk"
   text: "lo 插件开发工具包"
   tagline: |
     lo Core 与插件之间的稳定契约层。

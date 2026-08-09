@@ -1,7 +1,7 @@
 /**
- * @lo/sdk —— TypeScript 类型声明
+ * @lo/plugins-sdk —— TypeScript 类型声明
  *
- * 插件开发者如果使用 TypeScript，可从 '@lo/sdk' 获得类型提示。
+ * 插件开发者如果使用 TypeScript，可从 '@lo/plugins-sdk' 获得类型提示。
  * 注意：这是类型层，不影响运行时（运行时仍是 CommonJS 的 .cjs 实现）。
  */
 

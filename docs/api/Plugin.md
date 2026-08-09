@@ -5,7 +5,7 @@
 外部数据适配建议用 [ResourceProvider](./ResourceProvider)。
 
 ```js
-const { Plugin } = require('@lo/sdk');
+const { Plugin } = require('@lo/plugins-sdk');
 
 class HelloPlugin extends Plugin {
   manifest() {

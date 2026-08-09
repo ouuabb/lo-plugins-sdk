@@ -1,5 +1,5 @@
 {
-  "name": "@lo/sdk",
+  "name": "@lo/plugins-sdk",
   "version": "0.1.0",
   "description": "lo 插件开发工具包 —— lo Core 与插件之间的稳定契约层",
   "main": "src/index.cjs",

@@ -32,7 +32,7 @@ Resource[]
 ## 扩展 ResourceProvider
 
 ```js
-const { ResourceProvider, ResourceBuilder, RelationBuilder } = require('@lo/sdk');
+const { ResourceProvider, ResourceBuilder, RelationBuilder } = require('@lo/plugins-sdk');
 
 class EpubProvider extends ResourceProvider {
   manifest() {

@@ -2,21 +2,21 @@
 
 ## 安装
 
-lo SDK 目前是独立源码仓库（将来会发布 npm 包 `@lo/sdk`）。
+lo SDK 目前是独立源码仓库（将来会发布 npm 包 `@lo/plugins-sdk`）。
 
 在你的插件项目中安装方式：
 
 ```bash
 # 方式 1：将来发布 npm 后
-npm install @lo/sdk
+npm install @lo/plugins-sdk
 
 # 方式 2：当前阶段，本地源码引用
-# 假设 lo-sdk 与 lo 仓库在同一目录
-npm install ../lo-sdk
+# 假设 lo-plugins-sdk 与 lo 仓库在同一目录
+npm install ../lo-plugins-sdk
 ```
 
-> lo 运行时加载插件时，会自动把 `@lo/sdk`、`lo-sdk` 两个模块解析到内置 SDK 版本，
-> 因此即便你的插件未显式安装 `@lo/sdk`，也能在 lo 仓库中成功 `require('@lo/sdk')`。
+> lo 运行时加载插件时，会自动把 `@lo/plugins-sdk`、`lo-plugins-sdk` 两个模块解析到内置 SDK 版本，
+> 因此即便你的插件未显式安装 `@lo/plugins-sdk`，也能在 lo 仓库中成功 `require('@lo/plugins-sdk')`。
 
 ---
 
@@ -45,7 +45,7 @@ my-first-plugin/
 `index.js`：
 
 ```js
-const { Plugin } = require('@lo/sdk');
+const { Plugin } = require('@lo/plugins-sdk');
 
 class MyFirstPlugin extends Plugin {
   manifest() {

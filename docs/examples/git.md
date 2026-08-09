@@ -18,7 +18,7 @@ Connector 角色：持续监听 Git 仓库，增量推送 docs/images 目录的�
 ## index.js
 
 ```js
-const { ResourceProvider, ResourceBuilder } = require('@lo/sdk');
+const { ResourceProvider, ResourceBuilder } = require('@lo/plugins-sdk');
 const path = require('path');
 
 class GitConnector extends ResourceProvider {

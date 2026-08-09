@@ -4,7 +4,7 @@ global.testUtils = {
   async createTempDir() {
     const fs = require('fs-extra');
     const path = require('path');
-    return await fs.mkdtemp(path.join(require('os').tmpdir(), 'lo-sdk-test-'));
+    return await fs.mkdtemp(path.join(require('os').tmpdir(), 'lo-plugins-sdk-test-'));
   },
 
   async cleanupDir(dir) {

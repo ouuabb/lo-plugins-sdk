@@ -5,7 +5,7 @@
 做外部数据适配的插件应该继承此类而不是 Plugin。
 
 ```js
-const { ResourceProvider, ResourceBuilder, RelationBuilder } = require('@lo/sdk');
+const { ResourceProvider, ResourceBuilder, RelationBuilder } = require('@lo/plugins-sdk');
 
 class EpubAdapter extends ResourceProvider {
   manifest() {

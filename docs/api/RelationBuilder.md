@@ -3,7 +3,7 @@
 链式构造 RelationCandidate。
 
 ```js
-const { RelationBuilder } = require('@lo/sdk');
+const { RelationBuilder } = require('@lo/plugins-sdk');
 
 // 书籍包含章节（假设 bookRid / chapterRid 已存在）
 await ctx.relations.create(

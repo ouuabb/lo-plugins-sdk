@@ -5,7 +5,7 @@ const {
 
 /* ─────────────────────────────────── 1. 入口导出正确性 ──────────────────────────────── */
 
-describe('@lo/sdk 入口导出', () => {
+describe('@lo/plugins-sdk 入口导出', () => {
   test('所有核心模块都已导出', () => {
     expect(typeof Plugin).toBe('function');
     expect(typeof ResourceProvider).toBe('function');

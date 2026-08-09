@@ -62,7 +62,7 @@
 ## 典型代码骨架
 
 ```js
-const { ResourceProvider } = require('@lo/sdk');
+const { ResourceProvider } = require('@lo/plugins-sdk');
 
 class EpubAdapter extends ResourceProvider {
   manifest() {
