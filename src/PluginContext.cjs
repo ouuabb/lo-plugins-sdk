@@ -20,6 +20,7 @@ class PluginContext {
    * @param {object} [injections.eventBus]  — 事件总线
    * @param {object} [injections.resources] — ResourceFacade
    * @param {object} [injections.relations] — RelationFacade
+   * @param {string} [injections.repoPath]  — lo 仓库根目录路径（Core 注入）
    */
   constructor(injections = {}) {
     this._pluginId = injections.pluginId || null;
@@ -30,6 +31,15 @@ class PluginContext {
     this._eventBus = injections.eventBus || createNoopEventBus();
     this._resources = injections.resources || createNoopResources();
     this._relations = injections.relations || createNoopRelations();
+    this._repoPath = injections.repoPath || null;
+  }
+
+  /**
+   * lo 仓库根目录路径（只读字符串，非 Repository 对象）
+   * 插件用于解析仓库内相对路径（如 EPUB 文件、自定义数据目录）
+   */
+  get repoPath() {
+    return this._repoPath;
   }
 
   /** 当前插件 ID */
@@ -142,6 +152,8 @@ function createNoopRelations() {
     async create() { return null; },
     async listFrom() { return []; },
     async listTo() { return []; },
+    async getByFromRidAndType() { return []; },
+    async update() { return null; },
     async remove() { return false; }
   };
 }
